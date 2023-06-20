@@ -19,7 +19,7 @@ public:
     void wyswietl_najepszy_i_najgorszy_wynik();
 
 private:
-    vector<documents> wpisy; // Kontener przechowujący wpisy
+    vector<documents> wpisy;
 };
 
 
@@ -34,8 +34,7 @@ void documents::dodaj_wpis() {
     cout << "Wyniki z kolokwium: " << endl;
     cin >> wpis.wynik;
 
-    this -> wpisy.push_back(wpis);
-
+    this->wpisy.push_back(wpis);
 }
 
 void documents::usun_wpis() {
@@ -56,19 +55,77 @@ void documents::usun_wpis() {
 
 
 void documents::aktualizuj_wpis() {
+    int wpisId;
 
+    cout << "Podaj id wpisu do aktualizacji: ";
+    cin >> wpisId;
+
+    for (auto it = wpisy.begin(); it != wpisy.end(); ++it) {
+        if (it->id == wpisId) {
+            cout << "Aktualizacja wpisu o ID " << wpisId << ":" << endl;
+
+            cout << "Nowe imię: ";
+            cin >> it->imie;
+
+            cout << "Nowa płeć (k/m): ";
+            cin >> it->plec;
+
+            cout << "Nowy wynik: ";
+            cin >> it->wynik;
+
+            cout << "Wpis o ID " << wpisId << " został zaktualizowany." << endl;
+            return;
+        }
+    }
+    cout << "Nie znaleziono wpisu o ID " << wpisId << "." << endl;
 }
+
 
 void documents::wyswietl_wszystkie_pliki() {
+    if (wpisy.empty()) {
+        cout << "Brak wpisow do wyswietlenia." << endl;
+        return;
+    }
 
+    cout << "Wszystkie wpisy:" << endl;
+    for (const auto& wpis : wpisy) {
+        cout << "ID: " << wpis.id << endl;
+        cout << "Imię: " << wpis.imie << endl;
+        cout << "Płeć: " << wpis.plec << endl;
+        cout << "Wynik: " << wpis.wynik << endl;
+        cout << "---------------------" << endl;
+    }
 }
+
 
 double documents::oblicz_srednia_wynikow_wybranego_studenta() {
-    return 0;
+    int wpisId;
+    int sumaWynikow = 0;
+    int liczbaWynikow = 0;
+
+    cout << "Podaj ID studenta: ";
+    cin >> wpisId;
+
+    for (const auto& wpis : wpisy) {
+        if (wpis.id == wpisId) {
+            sumaWynikow += wpis.wynik;
+            liczbaWynikow++;
+        }
+    }
+
+    if (liczbaWynikow == 0) {
+        cout << "Nie znaleziono studenta o podanym ID." << endl;
+        return 0;
+    }
+
+    double srednia = static_cast<double>(sumaWynikow) / liczbaWynikow;
+    return srednia;
 }
 
-void documents::wyswietl_srednia_wynikow_wybranego_studenta() {
 
+void documents::wyswietl_srednia_wynikow_wybranego_studenta() {
+    double srednia = oblicz_srednia_wynikow_wybranego_studenta();
+    cout << "Średnia wyników wybranego studenta: " << srednia << endl;
 }
 
 double documents::oblicz_i_wyswietl_srednia_wszystkich_studentow() {
@@ -83,30 +140,50 @@ void documents::wyswietl_najepszy_i_najgorszy_wynik() {
 int main() {
     int choice;
 
-    cout << "MENU" << endl;
-    cout << "1. Dodaj wpis" << endl;
-    cout << "2. Usuń wpis" << endl;
-    cout << "3. Aktualizuj wpis" << endl;
-    cout << "4. Wyświetl wszystkie wpisy" << endl;
-    cout << "5. Oblicz średnią wyników wybranego studenta" << endl;
-    cout << "6. Wyświetl średnią wyników wybranego studenta" << endl;
-    cout << "7. Oblicz i wyświetl średnią wszystkich studentów" << endl;
-    cout << "8. Wyświetl najlepszy i najgorszy wynik (wraz z danymi studentów, którzy je osiągneli)." << endl;
-    cout << "Wpisz swój wybór: ";
-    cin >> choice;
-
     documents documents1;
 
-    switch (choice) {
-        case 1:
-            documents1.dodaj_wpis();
+    while (true) {
+
+        cout << "MENU" << endl;
+        cout << "1. Dodaj wpis" << endl;
+        cout << "2. Usuń wpis" << endl;
+        cout << "3. Aktualizuj wpis" << endl;
+        cout << "4. Wyświetl wszystkie wpisy" << endl;
+        cout << "5. Oblicz średnią wyników wybranego studenta" << endl;
+        cout << "6. Wyświetl średnią wyników wybranego studenta" << endl;
+        cout << "7. Oblicz i wyświetl średnią wszystkich studentów" << endl;
+        cout << "8. Wyświetl najlepszy i najgorszy wynik (wraz z danymi studentów, którzy je osiągneli)." << endl;
+        cout << "Wpisz swój wybór: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                documents1.dodaj_wpis();
+                break;
+            case 2:
+                documents1.usun_wpis();
+                break;
+            case 3:
+                documents1.aktualizuj_wpis();
+                break;
+            case 4:
+                documents1.wyswietl_wszystkie_pliki();
+                break;
+            case 5:
+                documents1.oblicz_srednia_wynikow_wybranego_studenta();
+                break;
+            case 6:
+                documents1.wyswietl_srednia_wynikow_wybranego_studenta();
+            default:
+                cout << "Nieznana wartość";
+                break;
+        }
+
+        if (choice == 9) {
             break;
-        case 2:
-            documents1.usun_wpis();
-            break;
-        default:
-            cout << "Nieznana wartość";
-            break;
+        }
+
+
     }
 
     return 0;
