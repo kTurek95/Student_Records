@@ -128,13 +128,58 @@ void documents::wyswietl_srednia_wynikow_wybranego_studenta() {
     cout << "Średnia wyników wybranego studenta: " << srednia << endl;
 }
 
+
 double documents::oblicz_i_wyswietl_srednia_wszystkich_studentow() {
-    return 0;
+    if (wpisy.empty()) {
+        cout << "Brak wpisów do obliczenia średniej." << endl;
+        return 0;
+    }
+
+    int sumaWynikow = 0;
+    int liczbaWynikow = 0;
+
+    for (const auto& wpis : wpisy) {
+        sumaWynikow += wpis.wynik;
+        liczbaWynikow++;
+    }
+
+    double srednia = static_cast<double>(sumaWynikow) / liczbaWynikow;
+    cout << "Średnia wyników wszystkich studentów: " << srednia << endl;
+    return srednia;
 }
 
 void documents::wyswietl_najepszy_i_najgorszy_wynik() {
+    if (wpisy.empty()) {
+        cout << "Brak wpisów do wyświetlenia." << endl;
+        return;
+    }
 
+    int najgorszyWynik = wpisy[0].wynik;
+    int najlepszyWynik = wpisy[0].wynik;
+    string imieNajgorszego = wpisy[0].imie;
+    string imieNajlepszego = wpisy[0].imie;
+
+    for (const auto& wpis : wpisy) {
+        if (wpis.wynik < najgorszyWynik) {
+            najgorszyWynik = wpis.wynik;
+            imieNajgorszego = wpis.imie;
+        }
+
+        if (wpis.wynik > najlepszyWynik) {
+            najlepszyWynik = wpis.wynik;
+            imieNajlepszego = wpis.imie;
+        }
+    }
+
+    cout << "Najlepszy wynik:" << endl;
+    cout << "Imię: " << imieNajlepszego << endl;
+    cout << "Wynik: " << najlepszyWynik << endl;
+
+    cout << "Najgorszy wynik:" << endl;
+    cout << "Imię: " << imieNajgorszego << endl;
+    cout << "Wynik: " << najgorszyWynik << endl;
 }
+
 
 
 int main() {
@@ -174,8 +219,15 @@ int main() {
                 break;
             case 6:
                 documents1.wyswietl_srednia_wynikow_wybranego_studenta();
+                break;
+            case 7:
+                documents1.oblicz_i_wyswietl_srednia_wszystkich_studentow();
+                break;
+            case 8:
+                documents1.wyswietl_najepszy_i_najgorszy_wynik();
+                break;
             default:
-                cout << "Nieznana wartość";
+                cout << "Nieznana wartość" << endl;
                 break;
         }
 
